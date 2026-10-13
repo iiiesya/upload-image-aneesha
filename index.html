@@ -104,7 +104,7 @@
             padding: 2rem;
         }
 
-        /* Kotak Muat Naik dengan Input Telus Menyeluruh (Native Mobile Fix) */
+        /* Kotak Muat Naik dengan Lapisan Input Asli Telefon */
         .upload-section {
             border: 2px dashed var(--dark-gold);
             border-radius: 12px;
@@ -123,7 +123,6 @@
             border-color: var(--primary-gold);
         }
 
-        /* Input fail dilapiskan penuh atas kotak dengan opacity 0 untuk bypass sekatan mobile */
         input[type="file"] {
             position: absolute;
             top: 0;
@@ -294,14 +293,13 @@
         </header>
 
         <div class="content">
-            <!-- Kotak Muat Naik dengan Lapisan Input Asli Telefon -->
+            <!-- Kotak Muat Naik Fail -->
             <div class="upload-section" id="dropZone">
                 <div class="upload-icon">🏛️</div>
                 <div class="upload-text">
                     <h3 id="ui-drag-title">Sentuh atau Pilih Media Di Sini</h3>
                     <p id="ui-drag-desc">Muat naik Gambar atau Video daripada peranti anda</p>
                 </div>
-                <!-- Input diletakkan di atas tanpa display:none supaya galeri/kamera telefon terbuka serta-merta -->
                 <input type="file" id="fileInput">
             </div>
 
@@ -311,13 +309,14 @@
                 <div class="file-info" id="fileInfo"></div>
                 <div class="btn-group">
                     <button class="btn btn-secondary" id="ui-btn-reset" onclick="resetUpload()">Batal / Pilih Semula</button>
-                    <a href="https://drive.google.com/drive/folders/1Z5ipYJDYmlIoeMj2DmMp_wvIM6SokghR" target="_blank" class="btn btn-primary" id="ui-btn-action">Simpan ke Google Drive</a>
+                    <!-- Butang aksi dinamik yang menghubungkan terus ke Google Drive -->
+                    <a href="https://drive.google.com/drive/folders/1Z5ipYJDYmlIoeMj2DmMp_wvIM6SokghR" target="_blank" class="btn btn-primary" id="ui-btn-action">Muat Naik ke Google Drive</a>
                 </div>
             </div>
 
             <!-- Notis Pautan Google Drive -->
             <div class="drive-notice">
-                <span id="ui-drive-text">Nota: Video yang dimuat naik akan disimpan dan diuruskan terus di dalam folder simpanan rasmi Google Drive.</span>
+                <span id="ui-drive-text">Nota: Fail video yang dimuat naik akan disimpan dan diuruskan terus di dalam folder simpanan rasmi Google Drive.</span>
                 <a href="https://drive.google.com/drive/folders/1Z5ipYJDYmlIoeMj2DmMp_wvIM6SokghR" target="_blank" id="ui-drive-link">Buka Folder Google Drive Rasmi ↗</a>
             </div>
         </div>
@@ -334,9 +333,9 @@
                 dragTitle: "Sentuh atau Pilih Media Di Sini",
                 dragDesc: "Muat naik Gambar atau Video daripada peranti anda",
                 btnReset: "Batal / Pilih Semula",
-                btnActionVideo: "Hantar ke Google Drive",
+                btnActionVideo: "Muat Naik ke Google Drive",
                 btnActionImage: "Sahkan Gambar",
-                driveText: "Nota: Fail video yang dimuat naik akan diselaraskan ke pangkalan Google Drive yang disediakan.",
+                driveText: "Nota: Fail video yang dimuat naik akan disimpan ke folder Google Drive rasmi yang disediakan.",
                 driveLink: "Buka Folder Google Drive Rasmi ↗",
                 toastSuccess: "Media berjaya dipilih dan bersedia!",
                 fileDetails: "Fail dipilih: "
@@ -347,9 +346,9 @@
                 dragTitle: "Tap or Select Media Here",
                 dragDesc: "Upload Images or Videos from your device",
                 btnReset: "Cancel / Reselect",
-                btnActionVideo: "Save to Google Drive",
+                btnActionVideo: "Upload to Google Drive",
                 btnActionImage: "Confirm Image",
-                driveText: "Note: Uploaded video files will be stored and managed securely inside the designated Google Drive folder.",
+                driveText: "Note: Uploaded video files will be stored directly inside the designated Google Drive folder.",
                 driveLink: "Open Official Google Drive Folder ↗",
                 toastSuccess: "Media successfully loaded and ready!",
                 fileDetails: "Selected file: "
@@ -390,7 +389,6 @@
 
         window.currentFileType = '';
 
-        // Pengendalian penukaran fail apabila pengguna memilih dari galeri telefon / PC
         fileInput.addEventListener('change', function() {
             if (this.files && this.files.length > 0) {
                 handleFileSelect(this.files[0]);
@@ -407,9 +405,10 @@
             const fileType = file.type.toLowerCase();
             const fileName = file.name.toLowerCase();
             
-            // Pengesanan fail yang lebih fleksibel untuk semua jenis peranti
-            const isImage = fileType.startsWith('image/') || /\.(jpg|jpeg|png|gif|webp|heic|heif)\$/.test(fileName);
-            const isVideo = fileType.startsWith('video/') || /\.(mp4|mov|avi|mkv|webm|3gp)\$/.test(fileName);
+            const isImage = fileType.startsWith('image/') || /\.(jpg|jpeg|png|gif|webp|heic|heif)$/.test(fileName);
+            const isVideo = fileType.startsWith('video/') || /\.(mp4|mov|avi|mkv|webm|3gp)$/.test(fileName);
+
+            const actionBtn = document.getElementById('ui-btn-action');
 
             if (isImage) {
                 window.currentFileType = 'image';
@@ -417,11 +416,12 @@
                 img.src = URL.createObjectURL(file);
                 img.className = 'preview-media';
                 mediaPreviewWrapper.appendChild(img);
-                document.getElementById('ui-btn-action').innerText = t.btnActionImage;
-                document.getElementById('ui-btn-action').href = "#";
-                document.getElementById('ui-btn-action').onclick = (e) => {
+                
+                actionBtn.innerText = t.btnActionImage;
+                actionBtn.href = "#";
+                actionBtn.onclick = (e) => {
                     e.preventDefault();
-                    showToast(currentLang === 'bm' ? 'Gambar sedia untuk diproses.' : 'Image ready for processing.');
+                    showToast(currentLang === 'bm' ? 'Gambar sedia diproses secara lokal.' : 'Image ready locally.');
                 };
             } else if (isVideo) {
                 window.currentFileType = 'video';
@@ -431,10 +431,10 @@
                 video.controls = true;
                 mediaPreviewWrapper.appendChild(video);
                 
-                const actionBtn = document.getElementById('ui-btn-action');
+                // Halakan pengguna terus ke pautan Google Drive untuk memasukkan video
                 actionBtn.innerText = t.btnActionVideo;
                 actionBtn.href = "https://drive.google.com/drive/folders/1Z5ipYJDYmlIoeMj2DmMp_wvIM6SokghR";
-                actionBtn.onclick = null;
+                actionBtn.onclick = null; 
             } else {
                 alert(currentLang === 'bm' ? 'Sila pilih fail jenis Gambar atau Video sah.' : 'Please select a valid Image or Video file.');
                 return;
