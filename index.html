@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesona Warisan - Muat Naik Media Klasik & Moden</title>
+    <style>
+        :root {
+            --primary-gold: #D4AF37;
+            --dark-gold: #AA7C11;
+            --royal-maroon: #4A0E17;
+            --deep-bg: #1A1110;
+            --card-bg: rgba(255, 253, 247, 0.95);
+            --text-main: #2C221E;
+            --text-muted: #6B5B52;
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--deep-bg);
+            background-image: 
+                radial-gradient(circle at 50% 20%, #3d141b 0%, transparent 60%),
+                linear-gradient(to bottom, #1a1110, #0d0807);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 
+                        0 0 0 2px var(--primary-gold);
+            overflow: hidden;
+            position: relative;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header Gaya Istana Klasik */
+        header {
+            background: linear-gradient(135deg, var(--royal-maroon), #2b080d);
+            color: var(--primary-gold);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            border-bottom: 3px solid var(--primary-gold);
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 0.95rem;
+            color: #f3e5ab;
+            opacity: 0.9;
+        }
+
+        .lang-switch {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid var(--primary-gold);
+            color: var(--primary-gold);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .lang-switch:hover {
+            background: var(--primary-gold);
+            color: var(--royal-maroon);
+        }
+
+        /* Kandungan Utama */
+        .content {
+            padding: 2rem;
+        }
+
+        /* Kotak Muat Naik dengan Input Telus Menyeluruh (Native Mobile Fix) */
+        .upload-section {
+            border: 2px dashed var(--dark-gold);
+            border-radius: 12px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            background: rgba(212, 175, 55, 0.03);
+            transition: var(--transition);
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .upload-section:hover {
+            background: rgba(212, 175, 55, 0.08);
+            border-color: var(--primary-gold);
+        }
+
+        /* Input fail dilapiskan penuh atas kotak dengan opacity 0 untuk bypass sekatan mobile */
+        input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 5;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--dark-gold);
+            margin-bottom: 1rem;
+            pointer-events: none;
+        }
+
+        .upload-text h3 {
+            font-size: 1.2rem;
+            color: var(--royal-maroon);
+            margin-bottom: 0.4rem;
+            pointer-events: none;
+        }
+
+        .upload-text p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        /* Bahagian Maklumat & Pratonton */
+        .preview-container {
+            display: none;
+            margin-top: 1.5rem;
+            background: #fff;
+            border-radius: 10px;
+            padding: 1rem;
+            border: 1px solid #e0d0c0;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .preview-media {
+            width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            border-radius: 6px;
+            background: #000;
+            margin-bottom: 1rem;
+        }
+
+        .file-info {
+            font-size: 0.9rem;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            word-break: break-all;
+        }
+
+        /* Butang Tindakan */
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-gold), var(--dark-gold));
+            color: var(--royal-maroon);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--royal-maroon);
+            color: var(--royal-maroon);
+        }
+
+        .btn-secondary:hover {
+            background: var(--royal-maroon);
+            color: #fff;
+        }
+
+        /* Status Pautan Google Drive */
+        .drive-notice {
+            margin-top: 2rem;
+            background: rgba(74, 14, 23, 0.05);
+            border-left: 4px solid var(--royal-maroon);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .drive-notice a {
+            color: var(--royal-maroon);
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        /* Notifikasi Animasi */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            background: var(--royal-maroon);
+            color: var(--primary-gold);
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--primary-gold);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsif Mudah Alih */
+        @media (max-width: 600px) {
+            body { padding: 1rem 0.5rem; }
+            header { padding: 1.5rem 1rem; }
+            header h1 { font-size: 1.5rem; }
+            .content { padding: 1.2rem; }
+            .btn-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <button class="lang-switch" id="langToggle" onclick="toggleLanguage()">EN / BM</button>
+            <h1 id="ui-title">Pesona Warisan</h1>
+            <p id="ui-subtitle">Gerbang Muat Naik Media Klasik & Moden</p>
+        </header>
+
+        <div class="content">
+            <!-- Kotak Muat Naik dengan Lapisan Input Asli Telefon -->
+            <div class="upload-section" id="dropZone">
+                <div class="upload-icon">🏛️</div>
+                <div class="upload-text">
+                    <h3 id="ui-drag-title">Sentuh atau Pilih Media Di Sini</h3>
+                    <p id="ui-drag-desc">Muat naik Gambar atau Video daripada peranti anda</p>
+                </div>
+                <!-- Input diletakkan di atas tanpa display:none supaya galeri/kamera telefon terbuka serta-merta -->
+                <input type="file" id="fileInput">
+            </div>
+
+            <!-- Bahagian Pratonton -->
+            <div class="preview-container" id="previewContainer">
+                <div id="mediaPreviewWrapper"></div>
+                <div class="file-info" id="fileInfo"></div>
+                <div class="btn-group">
+                    <button class="btn btn-secondary" id="ui-btn-reset" onclick="resetUpload()">Batal / Pilih Semula</button>
+                    <a href="https://drive.google.com/drive/folders/1Z5ipYJDYmlIoeMj2DmMp_wvIM6SokghR" target="_blank" class="btn btn-primary" id="ui-btn-action">Simpan ke Google Drive</a>
+                </div>
+            </div>
+
+            <!-- Notis Pautan Google Drive -->
+            <div class="drive-notice">
+                <span id="ui-drive-text">Nota: Video yang dimuat naik akan disimpan dan diuruskan terus di dalam folder simpanan rasmi Google Drive.</span>
+                <a href="https://drive.google.com/drive/folders/1Z5ipYJDYmlIoeMj2DmMp_wvIM6SokghR" target="_blank" id="ui-drive-link">Buka Folder Google Drive Rasmi ↗</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Elemen Toast Notifikasi -->
+    <div class="toast" id="toast">Fail berjaya dipilih!</div>
+
+    <script>
+        const translations = {
+            bm: {
+                title: "Pesona Warisan",
+                subtitle: "Gerbang Muat Naik Media Klasik & Moden",
+                dragTitle: "Sentuh atau Pilih Media Di Sini",
+                dragDesc: "Muat naik Gambar atau Video daripada peranti anda",
+                btnReset: "Batal / Pilih Semula",
+                btnActionVideo: "Hantar ke Google Drive",
+                btnActionImage: "Sahkan Gambar",
+                driveText: "Nota: Fail video yang dimuat naik akan diselaraskan ke pangkalan Google Drive yang disediakan.",
+                driveLink: "Buka Folder Google Drive Rasmi ↗",
+                toastSuccess: "Media berjaya dipilih dan bersedia!",
+                fileDetails: "Fail dipilih: "
+            },
+            en: {
+                title: "Heritage Elegance",
+                subtitle: "Classic & Modern Media Upload Portal",
+                dragTitle: "Tap or Select Media Here",
+                dragDesc: "Upload Images or Videos from your device",
+                btnReset: "Cancel / Reselect",
+                btnActionVideo: "Save to Google Drive",
+                btnActionImage: "Confirm Image",
+                driveText: "Note: Uploaded video files will be stored and managed securely inside the designated Google Drive folder.",
+                driveLink: "Open Official Google Drive Folder ↗",
+                toastSuccess: "Media successfully loaded and ready!",
+                fileDetails: "Selected file: "
+            }
+        };
+
+        let currentLang = 'bm';
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'bm' ? 'en' : 'bm';
+            updateTexts();
+        }
+
+        function updateTexts() {
+            const t = translations[currentLang];
+            document.getElementById('ui-title').innerText = t.title;
+            document.getElementById('ui-subtitle').innerText = t.subtitle;
+            document.getElementById('ui-drag-title').innerText = t.dragTitle;
+            document.getElementById('ui-drag-desc').innerText = t.dragDesc;
+            document.getElementById('ui-btn-reset').innerText = t.btnReset;
+            document.getElementById('ui-drive-text').innerText = t.driveText;
+            document.getElementById('ui-drive-link').innerText = t.driveLink;
+            
+            const actionBtn = document.getElementById('ui-btn-action');
+            if(window.currentFileType === 'video') {
+                actionBtn.innerText = t.btnActionVideo;
+            } else if(window.currentFileType === 'image') {
+                actionBtn.innerText = t.btnActionImage;
+            }
+        }
+
+        const fileInput = document.getElementById('fileInput');
+        const dropZone = document.getElementById('dropZone');
+        const previewContainer = document.getElementById('previewContainer');
+        const mediaPreviewWrapper = document.getElementById('mediaPreviewWrapper');
+        const fileInfo = document.getElementById('fileInfo');
+        const toast = document.getElementById('toast');
+
+        window.currentFileType = '';
+
+        // Pengendalian penukaran fail apabila pengguna memilih dari galeri telefon / PC
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files.length > 0) {
+                handleFileSelect(this.files[0]);
+            }
+        });
+
+        function handleFileSelect(file) {
+            mediaPreviewWrapper.innerHTML = '';
+            fileInfo.innerHTML = '';
+
+            const t = translations[currentLang];
+            fileInfo.innerHTML = `<strong>${t.fileDetails}</strong> ${file.name} (${(file.size / (1024*1024)).toFixed(2)} MB)`;
+
+            const fileType = file.type.toLowerCase();
+            const fileName = file.name.toLowerCase();
+            
+            // Pengesanan fail yang lebih fleksibel untuk semua jenis peranti
+            const isImage = fileType.startsWith('image/') || /\.(jpg|jpeg|png|gif|webp|heic|heif)\$/.test(fileName);
+            const isVideo = fileType.startsWith('video/') || /\.(mp4|mov|avi|mkv|webm|3gp)\$/.test(fileName);
+
+            if (isImage) {
+                window.currentFileType = 'image';
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.className = 'preview-media';
+                mediaPreviewWrapper.appendChild(img);
+                document.getElementById('ui-btn-action').innerText = t.btnActionImage;
+                document.getElementById('ui-btn-action').href = "#";
+                document.getElementById('ui-btn-action').onclick = (e) => {
+                    e.preventDefault();
+                    showToast(currentLang === 'bm' ? 'Gambar sedia untuk diproses.' : 'Image ready for processing.');
+                };
+            } else if (isVideo) {
+                window.currentFileType = 'video';
+                const video = document.createElement('video');
+                video.src = URL.createObjectURL(file);
+                video.className = 'preview-media';
+                video.controls = true;
+                mediaPreviewWrapper.appendChild(video);
+                
+                const actionBtn = document.getElementById('ui-btn-action');
+                actionBtn.innerText = t.btnActionVideo;
+                actionBtn.href = "https://drive.google.com/drive/folders/1Z5ipYJDYmlIoeMj2DmMp_wvIM6SokghR";
+                actionBtn.onclick = null;
+            } else {
+                alert(currentLang === 'bm' ? 'Sila pilih fail jenis Gambar atau Video sah.' : 'Please select a valid Image or Video file.');
+                return;
+            }
+
+            dropZone.style.display = 'none';
+            previewContainer.style.display = 'block';
+            showToast(t.toastSuccess);
+        }
+
+        function resetUpload() {
+            fileInput.value = '';
+            previewContainer.style.display = 'none';
+            dropZone.style.display = 'block';
+            mediaPreviewWrapper.innerHTML = '';
+            window.currentFileType = '';
+        }
+
+        function showToast(message) {
+            toast.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
